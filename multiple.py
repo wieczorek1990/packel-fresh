@@ -2,8 +2,8 @@ from pssh.clients import ParallelSSHClient
 
 from utils import read_hosts
 
-COMMAND = 'uname'
-HOSTS_FILE = 'hosts.txt'
+COMMAND = "uname"
+HOSTS_FILE = "hosts.txt"
 
 
 def main() -> None:
@@ -16,5 +16,5 @@ def main() -> None:
             print(line)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

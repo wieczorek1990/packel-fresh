@@ -14,4 +14,4 @@ def read_single_host(file_path: str) -> str:
             line = line.strip()
             if line:
                 return line
-    return ''
+    return ""

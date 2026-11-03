@@ -2,8 +2,8 @@ from pssh.clients import SSHClient
 
 from utils import read_single_host
 
-COMMAND = 'uname'
-HOSTS_FILE = 'host.txt'
+COMMAND = "uname"
+HOSTS_FILE = "host.txt"
 
 
 def main() -> None:
@@ -15,5 +15,5 @@ def main() -> None:
         print(line)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
