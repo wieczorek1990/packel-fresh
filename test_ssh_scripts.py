@@ -1,20 +1,18 @@
-import tempfile
 import os
-from unittest.mock import patch, MagicMock
+import tempfile
 
-from parallel import get_hosts
-from single import get_host
+from utils import read_hosts, read_single_host
 
 
-class TestGetHosts:
-    """Tests for parallel.py's get_hosts function."""
+class TestReadHosts:
+    """Tests for utils.py's read_hosts function."""
 
     def test_reads_hosts_from_file(self):
         """Should return a list of hosts from a file."""
         with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False) as f:
             f.write("host1\nhost2\nhost3\n")
             f.flush()
-            hosts = get_hosts(f.name)
+            hosts = read_hosts(f.name)
         os.unlink(f.name)
 
         assert hosts == ["host1", "host2", "host3"]
@@ -24,7 +22,7 @@ class TestGetHosts:
         with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False) as f:
             f.write("  host1  \n\thost2\t\n host3 \n")
             f.flush()
-            hosts = get_hosts(f.name)
+            hosts = read_hosts(f.name)
         os.unlink(f.name)
 
         assert hosts == ["host1", "host2", "host3"]
@@ -34,7 +32,7 @@ class TestGetHosts:
         with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False) as f:
             f.write("host1\n\n   \nhost2\n\n")
             f.flush()
-            hosts = get_hosts(f.name)
+            hosts = read_hosts(f.name)
         os.unlink(f.name)
 
         assert hosts == ["host1", "host2"]
@@ -44,7 +42,7 @@ class TestGetHosts:
         with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False) as f:
             f.write("localhost\n")
             f.flush()
-            hosts = get_hosts(f.name)
+            hosts = read_hosts(f.name)
         os.unlink(f.name)
 
         assert hosts == ["localhost"]
@@ -52,21 +50,21 @@ class TestGetHosts:
     def test_file_not_found(self):
         """Should raise FileNotFoundError for missing files."""
         try:
-            get_hosts("nonexistent_file.txt")
+            read_hosts("nonexistent_file.txt")
             assert False, "Expected FileNotFoundError"
         except FileNotFoundError:
             pass
 
 
-class TestGetHost:
-    """Tests for single.py's get_host function."""
+class TestReadSingleHost:
+    """Tests for utils.py's read_single_host function."""
 
     def test_reads_single_host(self):
         """Should return a single host string from a file."""
         with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False) as f:
             f.write("localhost\n")
             f.flush()
-            host = get_host(f.name)
+            host = read_single_host(f.name)
         os.unlink(f.name)
 
         assert host == "localhost"
@@ -76,7 +74,7 @@ class TestGetHost:
         with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False) as f:
             f.write("  localhost  \n")
             f.flush()
-            host = get_host(f.name)
+            host = read_single_host(f.name)
         os.unlink(f.name)
 
         assert host == "localhost"
@@ -84,7 +82,7 @@ class TestGetHost:
     def test_file_not_found(self):
         """Should raise FileNotFoundError for missing files."""
         try:
-            get_host("nonexistent_file.txt")
+            read_single_host("nonexistent_file.txt")
             assert False, "Expected FileNotFoundError"
         except FileNotFoundError:
             pass
@@ -94,7 +92,7 @@ class TestGetHost:
         with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False) as f:
             f.write("localhost\nlocalhost\n")
             f.flush()
-            host = get_host(f.name)
+            host = read_single_host(f.name)
         os.unlink(f.name)
 
         assert host == "localhost"
@@ -104,7 +102,7 @@ class TestGetHost:
         with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False) as f:
             f.write("\n   \nlocalhost\n")
             f.flush()
-            host = get_host(f.name)
+            host = read_single_host(f.name)
         os.unlink(f.name)
 
         assert host == "localhost"
@@ -114,7 +112,7 @@ class TestGetHost:
         with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False) as f:
             f.write("")
             f.flush()
-            host = get_host(f.name)
+            host = read_single_host(f.name)
         os.unlink(f.name)
 
         assert host == ""
